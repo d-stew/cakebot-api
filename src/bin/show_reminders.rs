@@ -3,10 +3,10 @@ extern crate cakebot_api;
 
 use self::cakebot_api::*;
 use self::models::*;
-use diesel::prelude::*;
+use self::diesel::prelude::*;
 
 fn main() {
-  use self::schema::reminders::dsl::*;
+  use cakebot_api::schema::reminders::dsl::*;
 
     let connection = establish_connection();
     let results = reminders

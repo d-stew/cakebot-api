@@ -15,6 +15,23 @@ pub fn establish_connection() -> PgConnection {
 
     let database_url = env::var("DATABASE_URL")
         .expect("DATABASE_URL must be set");
+
     PgConnection::establish(&database_url)
-        .expect(&format!("Error connecting to {}", database_url))
+        .expect(&format!("Error connecting to {}", database_url));
+}
+
+use self::models::{Reminder, NewReminder};
+
+pub fn create_reminder<'a>(conn: &PgConnection, name: &'a str, remind_date: &'a str) -> Reminder {
+    use schema::reminders;
+
+    let new_reminder = NewReminder {
+        name: name,
+        remind_date: remind_date,
+    };
+
+    diesel::insert_into(reminders::table)
+        .values(&new_reminder)
+        .get_result(conn)
+        .expect("Error saving new reminder")
 }
